@@ -5,7 +5,7 @@ This project is a learning exercise in C++ programming. It explores key concepts
 
 ---
 
-## Key Concepts
+## Basic Key Concepts
 
 ### 1. **Program Behavior**
 - **`return 0`**: Indicates that the program ran successfully.
@@ -137,7 +137,7 @@ Popular styles include:
 
 ---
 
-## Topics To Be Covered
+## Other Key Concepts
 
 ### 1. **Pointers**
 Pointers are variables that store memory addresses. They allow direct memory access and manipulation.
