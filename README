@@ -1,0 +1,52 @@
+return 0 means program runs correctly. Any other 
+number means that there will be an error.
+
+Know that maybe because it is your terminal, or 
+shell or sth, but when you print out using 
+std::cout << "String", you may get "String%" for 
+some reason. Mitigate this by adding \n at the end 
+or flush the buffer
+
+Learning about data type in C++:
+Defining and initilization:
+[data type] [data name] = [value]
+ex: int file_size = 100;
+You can also define multiple variables on the same 
+line that are part of the same variables. 
+
+const [data type] [data name] = [value] to define a
+constant. 
+
+Different common data structure:
+-   int number = 10;
+-   float PI = 3.14;
+-   const float PIIIII = 3.14;
+-   namespace movement {
+        void up() {...}
+        void down() {...}
+        void left() {...}
+        void right() {...}
+    };
+-   int numbers[5] = {1,2,3,4,5};
+-   std::vector<int> nums = {1, 2, 3};
+    nums.push_back(4); // {1, 2, 3, 4}
+    nums.pop_back();   // {1, 2, 3}
+    nums.insert(nums.begin() + 1, 10); // {1, 10, 2, 3}
+    nums.erase(nums.begin() + 2);      // {1, 10, 3}
+
+
+
+
+Naming convention (No right or wrong):
+Popular naming convention:
+- int file_size (Snake Case)
+- int FileSize (Pascal Case)
+- int fileSize (Camel Case)
+- int iFileSize (Hungarian Notation)  
+
+Notes: 
+- \n is not the same as std::endl. std::endl will 
+flush the buffer so be careful. Or you can do this 
+- ++n in for loops get execute AFTER the for loop 
+is done while ++n in other places still mean n getting
+an increment first 
