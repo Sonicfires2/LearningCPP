@@ -139,27 +139,312 @@ Popular styles include:
 
 ## Other Key Concepts
 
-### 1. **Pointers**
-Pointers are variables that store memory addresses. They allow direct memory access and manipulation.
+### 1. **Pointers vs References in C++**
+
+#### **Definition**
+- **Pointer**: A variable that stores the memory address of another variable. Pointers can be reassigned and manipulated using arithmetic.
+- **Reference**: An alias for another variable. A reference cannot be null, reassigned, or manipulated directly.
+
+#### **Differences Between Pointers and References**
+| **Feature**             | **Pointer**                                         | **Reference**                                   |
+|-------------------------|---------------------------------------------------|------------------------------------------------|
+| **Definition**          | A pointer stores the memory address of a variable. | A reference is an alias for a variable.        |
+| **Syntax**              | `int* ptr = &x;`                                  | `int& ref = x;`                                |
+| **Nullability**         | Can be `nullptr` (no target).                     | Must always refer to a valid variable.         |
+| **Reassignment**        | Can point to a different variable after initialization. | Cannot be reassigned after initialization.     |
+| **Dereferencing**       | Requires `*ptr` to access the value.              | Automatically dereferenced when used.          |
+| **Arithmetic**          | Can perform pointer arithmetic (`ptr + 1`).       | Pointer arithmetic is not allowed.            |
+| **Use Cases**           | Dynamic memory, arrays, complex structures.       | Aliasing variables, simplifying function calls. |
+
+#### **Examples**
+
+##### Pointer Example
 ```cpp
-int x = 10;
-int* ptr = &x; // ptr stores the address of x
-std::cout << "Value: " << *ptr << std::endl; // Dereference pointer
+int x = 10, y = 20;
+int* ptr = &x; // Pointer to x
+std::cout << *ptr << std::endl; // Prints 10
+ptr = &y; // Pointer reassigned to y
+std::cout << *ptr << std::endl; // Prints 20
 ```
 
-### 2. **Classes** (Polymorphism, Overloading, Scoping)
-Classes define objects with properties and methods.
+##### Reference Example
 ```cpp
-class MyClass {
+int x = 10, y = 20;
+int& ref = x; // Reference to x
+std::cout << ref << std::endl; // Prints 10
+ref = y; // Assigns y's value to x (does NOT reassign ref)
+std::cout << x << std::endl; // Prints 20
+```
+
+#### **Key Notes**
+- **References Are Safer**:
+  - Cannot be null or uninitialized.
+  - Cannot be reassigned, so there’s no risk of dangling references.
+- **Pointers Are More Flexible**:
+  - Can point to `nullptr`.
+  - Can change what they point to, making them useful for dynamic memory.
+
+#### **When to Use**
+- Use **references** for:
+  - Function parameters and return values when aliasing is needed.
+  - Simple and safer variable aliases.
+
+- Use **pointers** for:
+  - Dynamic memory management.
+  - Low-level memory manipulation.
+
+# C++: Classes, Inheritance, Polymorphism, and Virtual Functions
+
+## **1. Classes in C++**
+
+A **class** is a blueprint for creating objects that encapsulate data (variables) and functions (methods) into a single entity.
+
+### **Structure of a Class**
+```cpp
+class ClassName {
+private:
+    int privateData; // Accessible only within the class
+
 public:
-    void greet() { std::cout << "Hello!" << std::endl; }
+    int publicData; // Accessible outside the class
+
+    // Constructor
+    ClassName(int data) : privateData(data), publicData(0) {}
+
+    // Member function
+    void display() {
+        std::cout << "Private Data: " << privateData << std::endl;
+        std::cout << "Public Data: " << publicData << std::endl;
+    }
+
+    // Getter for private data
+    int getPrivateData() const { return privateData; }
+
+    // Setter for private data
+    void setPrivateData(int value) { privateData = value; }
+};
+```
+
+### **Key Concepts of Classes**
+1. **Encapsulation**: Hides internal details and exposes functionality through public methods.
+2. **Access Specifiers**:
+   - `private`: Accessible only within the class.
+   - `protected`: Accessible within the class and derived classes.
+   - `public`: Accessible from anywhere in the program.
+3. **Constructors and Destructors**:
+   - **Constructor**: Initializes an object when it is created.
+     ```cpp
+     ClassName obj(10); // Constructor called
+     ```
+   - **Destructor**: Cleans up resources when the object is destroyed.
+     ```cpp
+     ~ClassName() { std::cout << "Object destroyed"; }
+     ```
+4. **Static Members**: Shared across all instances of the class.
+   ```cpp
+   class MyClass {
+   public:
+       static int counter; // Shared variable
+   };
+   int MyClass::counter = 0; // Initialize static member
+   ```
+5. **Const Member Functions**: Prevent modification of member variables.
+   ```cpp
+   int getData() const { return privateData; }
+   ```
+
+---
+
+## **2. Inheritance in C++**
+
+**Inheritance** allows a class (child/derived class) to inherit attributes and methods from another class (parent/base class).
+
+### **Basic Syntax**
+```cpp
+class Parent {
+public:
+    int publicVar;
+
+    void display() {
+        std::cout << "Parent Display" << std::endl;
+    }
 };
 
-MyClass obj;
-obj.greet();
+class Child : public Parent { // Inherits Parent class
+public:
+    void show() {
+        std::cout << "Child Show" << std::endl;
+    }
+};
+
+int main() {
+    Child obj;
+    obj.publicVar = 10; // Access Parent's member
+    obj.display();      // Access Parent's method
+    obj.show();         // Access Child's method
+}
 ```
-Polymorphism allows different behaviors for the same function call.
-Function overloading allows multiple functions with the same name but different parameters.
+
+### **Types of Inheritance**
+1. **Public Inheritance**: 
+   - `public` members of the base class remain `public` in the derived class.
+   - `protected` members remain `protected`.
+2. **Protected Inheritance**:
+   - `public` and `protected` members of the base class become `protected` in the derived class.
+3. **Private Inheritance**:
+   - `public` and `protected` members of the base class become `private` in the derived class.
+
+### **Key Concepts of Inheritance**
+1. **Overriding Methods**:
+   - A derived class can override base class methods.
+     ```cpp
+     class Parent {
+     public:
+         virtual void display() { std::cout << "Parent Display" << std::endl; }
+     };
+
+     class Child : public Parent {
+     public:
+         void display() override { std::cout << "Child Display" << std::endl; }
+     };
+     ```
+2. **Accessing Base Class**:
+   - Use `Parent::functionName()` to call the base class method explicitly.
+     ```cpp
+     Parent::display();
+     ```
+
+---
+
+## **3. Polymorphism in C++**
+
+**Polymorphism** allows a single interface to represent different types of behavior.
+
+### **Types of Polymorphism**
+1. **Compile-Time Polymorphism (Static Binding)**:
+   - Achieved using function overloading or operator overloading.
+
+2. **Run-Time Polymorphism (Dynamic Binding)**:
+   - Achieved using inheritance and virtual functions.
+
+### **Compile-Time Polymorphism**
+1. **Function Overloading**:
+   ```cpp
+   class Math {
+   public:
+       int add(int a, int b) { return a + b; }
+       double add(double a, double b) { return a + b; }
+   };
+   ```
+2. **Operator Overloading**:
+   ```cpp
+   class Complex {
+   public:
+       int real, imag;
+
+       Complex operator+(const Complex& obj) {
+           Complex temp;
+           temp.real = real + obj.real;
+           temp.imag = imag + obj.imag;
+           return temp;
+       }
+   };
+   ```
+
+### **Run-Time Polymorphism**
+1. **Virtual Functions**:
+   - Ensure that the derived class version of a function is called during runtime.
+   ```cpp
+   class Parent {
+   public:
+       virtual void display() { std::cout << "Parent Display" << std::endl; }
+   };
+
+   class Child : public Parent {
+   public:
+       void display() override { std::cout << "Child Display" << std::endl; }
+   };
+
+   int main() {
+       Parent* p = new Child();
+       p->display(); // Calls Child's display() (dynamic dispatch)
+       delete p;
+   }
+   ```
+2. **Pure Virtual Functions**:
+   - Used to define an interface.
+   ```cpp
+   class AbstractBase {
+   public:
+       virtual void display() = 0; // Pure virtual function
+   };
+
+   class Derived : public AbstractBase {
+   public:
+       void display() override {
+           std::cout << "Derived Display" << std::endl;
+       }
+   };
+   ```
+
+3. **Virtual Table (vtable)**:
+   - A mechanism for dynamic dispatch.
+   - The base class and derived class maintain a table of function pointers.
+   - At runtime, the vtable is used to resolve the correct function.
+
+---
+
+## **4. Virtual Functions and vtable in Detail**
+
+### **Why Virtual Functions?**
+- Without `virtual`, function calls are resolved at compile-time (static dispatch).
+- With `virtual`, function calls are resolved at runtime (dynamic dispatch), ensuring the correct derived function is invoked.
+
+### **vtable (Virtual Table)**
+1. **How It Works**:
+   - Each class with virtual functions has a vtable containing pointers to its virtual functions.
+   - Each object has a vptr (virtual pointer) pointing to the vtable of its class.
+
+2. **Example**:
+   ```cpp
+   class Parent {
+   public:
+       virtual void display() { std::cout << "Parent Display" << std::endl; }
+   };
+
+   class Child : public Parent {
+   public:
+       void display() override { std::cout << "Child Display" << std::endl; }
+   };
+
+   int main() {
+       Parent* p = new Child();
+       p->display(); // Child's display() is called via vtable
+       delete p;
+   }
+   ```
+
+### **Explicit Base Class Calls**
+- Use `Parent::functionName()` to explicitly call the base class version.
+   ```cpp
+   class Parent {
+   public:
+       virtual void display() { std::cout << "Parent Display" << std::endl; }
+   };
+
+   class Child : public Parent {
+   public:
+       void display() override {
+           std::cout << "Child Display" << std::endl;
+           Parent::display(); // Explicitly call Parent's display()
+       }
+   };
+
+   int main() {
+       Child c;
+       c.display();
+   }
+   ```
 
 ### 3. **Stack vs Heap**
 - **Stack**: Memory for local variables. Automatically managed, faster.
